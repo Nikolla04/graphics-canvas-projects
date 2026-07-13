@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grb KK Crvena Zvezda</title>
+</head>
+<body>
+    <canvas id="grbCanvas" width="500" height="500"></canvas>
+
+    <script>
+    const canvas = document.getElementById("grbCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function drawGrb() {
+        // Crvena pozadina unutar grba
+        ctx.fillStyle = "#EB1926";
+        ctx.beginPath();
+        ctx.moveTo(140, 110);
+        ctx.lineTo(360, 110);
+        ctx.lineTo(360, 160);
+        ctx.bezierCurveTo(360, 160, 338, 290, 250, 340);
+        ctx.bezierCurveTo(250, 340, 160, 290, 140, 155);
+        ctx.closePath();
+        ctx.fill();
+
+        // bela oblast unutar grba
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.moveTo(130, 90);   // Gornji levi ugao
+        ctx.lineTo(385, 90);   // Gornji desni ugao
+        ctx.lineTo(170, 260);
+        ctx.lineTo(130, 155);
+        ctx.closePath();
+        ctx.fill();
+
+        // Zlatni okvir grba
+        ctx.beginPath();
+        ctx.moveTo(126, 100);
+        ctx.lineTo(370, 100);
+        ctx.lineTo(370, 160);
+        ctx.bezierCurveTo(370, 160, 350, 300, 250, 350);
+        ctx.bezierCurveTo(250, 350, 150, 300, 130, 160);
+        ctx.lineTo(129.5, 100);
+        ctx.lineWidth = 7;
+        ctx.strokeStyle = "#CCA857";
+        ctx.stroke();
+        ctx.closePath();
+
+        // Crvena unutrašnja ivica
+        ctx.beginPath();
+        ctx.moveTo(140, 110);
+        ctx.lineTo(360, 110);
+        ctx.lineTo(360, 160);
+        ctx.bezierCurveTo(360, 160, 338, 290, 250, 340);
+        ctx.bezierCurveTo(250, 340, 160, 290, 140, 155);
+        ctx.closePath();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#EB1926";
+        ctx.stroke();
+
+        // Crvena zvezda unutar grba
+        drawStarWithOutline(ctx, 250, 210, 60, "#EB1926", 0);
+
+        // Natpis "KK" u gornjem levom uglu
+        ctx.font = "bold 40px Arial";
+        ctx.fillStyle = "#EB1926";
+        ctx.fillText("KK", 175, 145);
+
+        // Dodavanje zlatnih zvezda iznad grba
+        drawGoldStars(ctx, 250, 70); // Pozicija zvezda iznad grba
+    }
+        // Funkcija za crtanje zlatnih zvezda
+    function drawStar(ctx, cx, cy, outerRadius, color, rotation) {
+        const innerRadius = outerRadius * 0.5; // Poluprečnik unutrašnjih vrhova zvezde (polovina spoljašnjeg radijusa)
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((Math.PI / 180) * rotation);  // Rotacija zvezde u odnosu na zadati ugao
+        ctx.beginPath();
+        // for petlja za crtanje zvezde
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(
+                outerRadius * Math.cos((18 + i * 72) * Math.PI / 180),  // X koordinata spoljašnjeg vrha
+                -outerRadius * Math.sin((18 + i * 72) * Math.PI / 180)  // Y koordinata spoljašnjeg vrha
+            );// Unutrašnji vrhovi zvezde
+            ctx.lineTo(
+                innerRadius * Math.cos((54 + i * 72) * Math.PI / 180),   // X koordinata unutrašnjeg vrha
+                -innerRadius * Math.sin((54 + i * 72) * Math.PI / 180)   // Y koordinata unutrašnjeg vrha
+            );
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+    }
+      // funkcija za crtanje  zvezde unutar grba
+    function drawStarWithOutline(ctx, cx, cy, outerRadius, color, rotation) {
+        const innerRadius = outerRadius * 0.5;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((Math.PI / 180) * rotation);
+
+
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(
+                outerRadius * Math.cos((18 + i * 72) * Math.PI / 180),
+                -outerRadius * Math.sin((18 + i * 72) * Math.PI / 180)
+            );
+            ctx.lineTo(
+                innerRadius * Math.cos((54 + i * 72) * Math.PI / 180),
+                -innerRadius * Math.sin((54 + i * 72) * Math.PI / 180)
+            );
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Crtanje bele ivice oko zvezde
+        const whiteOutlineOffset = 4; // Debljina bele ivice
+        ctx.lineWidth = whiteOutlineOffset;
+        ctx.strokeStyle = "white"; // Boja ivice
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(
+                (outerRadius + whiteOutlineOffset) * Math.cos((18 + i * 72) * Math.PI / 180),
+                -(outerRadius + whiteOutlineOffset) * Math.sin((18 + i * 72) * Math.PI / 180)
+            );
+            ctx.lineTo(
+                (innerRadius + whiteOutlineOffset) * Math.cos((54 + i * 72) * Math.PI / 180),
+                -(innerRadius + whiteOutlineOffset) * Math.sin((54 + i * 72) * Math.PI / 180)
+            );
+        }
+        ctx.closePath();
+        ctx.stroke();
+
+        // Zlatni okvir
+        const outlineOffset = 6; // Odstojanje od zvezde za okvir
+        const outlineOuterRadius = outerRadius + outlineOffset; // spoljasnji radijus za okvir
+        const outlineInnerRadius = innerRadius + outlineOffset; // Unutrašnji radijus za okvir
+        ctx.lineWidth = 3; // Debljina okvira
+        ctx.strokeStyle = "#CCA857"; // Boja okvira
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+            ctx.lineTo(
+                outlineOuterRadius * Math.cos((18 + i * 72) * Math.PI / 180),
+                -outlineOuterRadius * Math.sin((18 + i * 72) * Math.PI / 180)
+            );
+            ctx.lineTo(
+                outlineInnerRadius * Math.cos((54 + i * 72) * Math.PI / 180),
+                -outlineInnerRadius * Math.sin((54 + i * 72) * Math.PI / 180)
+            );
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore(); // Vraćamo kontekst u prvobitno stanje
+    }
+    // Tekst sa imenom i indeksom
+    ctx.font="30px Times New Roman";
+ctx.fillStyle = "black";
+ctx.textAlign = "center";
+ctx.fillText("Nikola Petrović 40/2023", 350,390);
+// Funkcija za crtanje zlatnih zvezda iznad grba
+    function drawGoldStars(ctx, cx, cy) {
+        const starCount = 2; // Broj zvezda
+        const starSpacing = 10; // Razmak između zvezda
+        const starSize = 30; // Veličina zvezda
+        const color = "#CCA857"; // Zlatna boja
+
+        for (let i = 0; i < starCount; i++) {
+            drawStar(ctx, cx + (i - 0.5) * (starSize * 2 + starSpacing), cy, starSize, color, 0);
+        }
+    }
+    drawGrb();// Poziv glavne funkcije za crtanje grba
+    </script>
+</body>
+</html>
